@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 
-import { collectionJoin } from './collectionJoin';
+import { innerJoin, innerJoinDocument } from './collectionJoin';
 import { docJoin } from './docJoin';
+
+import { shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,19 +14,30 @@ import { docJoin } from './docJoin';
 export class AppComponent {
   user;
   joined;
+  joined2;
   constructor(private afs: AngularFirestore) {
-    // Usage docJoin:
-    // key = property on parent containing related docID
-    // val = path to collection
-
     this.user = this.afs
       .doc('users/jeff')
       .valueChanges()
-      .pipe(docJoin(afs, { pet: 'pets', bff: 'users', car: 'cars' }));
+      .pipe(
+        docJoin(afs, { pet: 'pets', bff: 'users', car: 'cars' }),
+        shareReplay(1)
+      );
 
     this.joined = this.afs
       .collection('users')
       .valueChanges()
-      .pipe(collectionJoin(afs, 'pet', 'pets'));
+      .pipe(
+        innerJoin(afs, 'userId', 'orders', 5),
+        shareReplay(1)
+      );
+
+    this.joined2 = this.afs
+      .collection('users')
+      .valueChanges()
+      .pipe(
+        innerJoinDocument(afs, 'pet', 'pets'),
+        shareReplay(1)
+      );
   }
 }

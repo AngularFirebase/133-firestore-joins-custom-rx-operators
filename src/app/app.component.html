@@ -1,12 +1,16 @@
-<!-- <h1>Joined User Doc</h1>
+<h1>Document JOIN Document(s)</h1>
 
 <div *ngFor="let item of user | async | keyvalue">
     {{ item.key }}: {{ item.value | json }}
-</div> -->
+</div>
+
+<hr>
+
+<h1>Collection JOIN Collection by Field (Inner Join)</h1>
 
 <div *ngFor="let doc of joined | async">
 
-    <h1>{{ doc.name }}</h1>
+    <h3>{{ doc.name }}</h3>
 
     <div *ngFor="let item of doc | keyvalue">
         {{ item.key }}: {{ item.value | json }}
@@ -14,6 +18,22 @@
 
     <hr>
 </div>
+
+
+<h1>Collection JOIN Documents</h1>
+
+<div *ngFor="let doc of joined2 | async">
+
+    <h3>{{ doc.name }}</h3>
+
+    <div *ngFor="let item of doc | keyvalue">
+        {{ item.key }}: {{ item.value | json }}
+    </div>
+
+    <hr>
+</div>
+
+
 
 <router-outlet>
 </router-outlet>
