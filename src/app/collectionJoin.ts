@@ -7,13 +7,14 @@ export const innerJoin = (
   afs: AngularFirestore,
   field,
   collection,
-  limit = Infinity
+  limit = 100
 ) => {
   return source =>
     defer(() => {
       // Operator state
       let collectionData;
 
+      // Track total num of joined doc reads
       let totalJoins = 0;
 
       return source.pipe(
@@ -28,7 +29,7 @@ export const innerJoin = (
             // Push doc read to Array
 
             if (doc[field]) {
-              // If user supplied query append it, otherwise query by join field
+              // Perform query on join key, with optional limit
               const q = ref => ref.where(field, '==', doc[field]).limit(limit);
 
               reads$.push(afs.collection(collection, q).valueChanges());
@@ -46,7 +47,9 @@ export const innerJoin = (
           });
         }),
         tap(final => {
-          console.log(`Queried ${final.length}, Joined ${totalJoins} docs`);
+          console.log(
+            `Queried ${(final as any).length}, Joined ${totalJoins} docs`
+          );
           totalJoins = 0;
         })
       );
@@ -96,7 +99,9 @@ export const innerJoinDocument = (afs: AngularFirestore, field, collection) => {
           });
         }),
         tap(final =>
-          console.log(`Queried ${final.length}, Joined ${cache.size} docs`)
+          console.log(
+            `Queried ${(final as any).length}, Joined ${cache.size} docs`
+          )
         )
       );
     });
