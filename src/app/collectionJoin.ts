@@ -3,7 +3,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 import { combineLatest, pipe, of, defer } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 
-export const innerJoin = (
+export const leftJoin = (
   afs: AngularFirestore,
   field,
   collection,
@@ -56,7 +56,7 @@ export const innerJoin = (
     });
 };
 
-export const innerJoinDocument = (afs: AngularFirestore, field, collection) => {
+export const leftJoinDocument = (afs: AngularFirestore, field, collection) => {
   return source =>
     defer(() => {
       // Operator state

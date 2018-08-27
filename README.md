@@ -1,6 +1,6 @@
 # Firestore Join Queries with Custom RxJS Operators
 
-Advanced RxJS Techniques to perform SQL-inspired joins with Firestore.
+Advanced RxJS Techniques to perform [SQL-inspired joins with Firestore](https://angularfirebase.com/lessons/firestore-joins-similar-to-sql/).
 
 ### Document Joins
 
@@ -45,7 +45,7 @@ afs.collection('users')
 
 ### Collection Joins
 
-`innerJoin` - Joins two collections by a shared document field. Useful when you have a many-to-many relationship. ie `FROM users INNER JOIN orders ON users.userId`
+`leftJoin` - Joins two collections by a shared document field. Useful when you have a many-to-many relationship, such as _Users have many Orders_ and _Order belongs to User_.
 
 ```
 +users
@@ -70,19 +70,19 @@ afs.collection('users')
 afs.collection('users')
       .valueChanges()
       .pipe(
-        innerJoin(afs, 'userId', 'orders')
+        leftJoin(afs, 'userId', 'orders')
       )
 
 
 // result
 
-{
+[{
     ...userData
     orders: [{ orderNo: 'A', userId: 'jeff' }, { orderNo: 'B', userId: 'jeff' }]
-}
+}]
 ```
 
-`innerJoinDocument` - Joins a related doc to each item in a collection. Useful when the documents each have a has-one relationship to some other document. i, e. user has_one country.
+`leftJoinDocument` - Joins a related doc to each item in a collection. Useful when the documents each have a has-one relationship to some other document. i, e. user has_one country.
 
 ```
 +users
@@ -108,8 +108,10 @@ afs.collection('users')
 
 // result
 
-{
-    ...userData
-    location: { name: 'USA', capital: 'Washington D.C.' }
-}
+[
+    {
+        ...userData
+        location: { name: 'USA', capital: 'Washington D.C.' }
+    },
+]
 ```

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 
-import { innerJoin, innerJoinDocument } from './collectionJoin';
+import { leftJoin, leftJoinDocument } from './collectionJoin';
 import { docJoin } from './docJoin';
 
 import { shareReplay } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class AppComponent {
       .collection('users')
       .valueChanges()
       .pipe(
-        innerJoin(afs, 'userId', 'orders', 5),
+        leftJoin(afs, 'userId', 'orders', 5),
         shareReplay(1)
       );
 
@@ -36,7 +36,7 @@ export class AppComponent {
       .collection('users')
       .valueChanges()
       .pipe(
-        innerJoinDocument(afs, 'pet', 'pets'),
+        leftJoinDocument(afs, 'pet', 'pets'),
         shareReplay(1)
       );
   }
